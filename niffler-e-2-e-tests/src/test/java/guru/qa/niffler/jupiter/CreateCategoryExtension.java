@@ -12,19 +12,19 @@ import java.util.UUID;
 
 public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback {
 
-    public static final  ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateCategoryExtension.class);
+    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateCategoryExtension.class);
 
     private final CategoriesApiClient categoriesApiClient = new CategoriesApiClient();
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
-                .ifPresent(anno ->{
+                .ifPresent(anno -> {
                     CategoryJson category = new CategoryJson(
-                           null,
-                            UUID.randomUUID().toString().substring(0,6),
+                            null,
+                            UUID.randomUUID().toString().substring(0, 6),
                             anno.username(),
-                            anno.archived()
+                            false
                     );
 
                     CategoryJson created = categoriesApiClient.addCategory(category);
@@ -42,7 +42,6 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExe
                             created
                     );
                 });
-
     }
 
     @Override
@@ -51,7 +50,6 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExe
                 context.getStore(NAMESPACE).get(context.getUniqueId(),
                         CategoryJson.class);
         if (!category.archived()) {
-// создаем объект с archived = true
             categoriesApiClient.updateCategory(new CategoryJson(
                     category.id(),
                     category.name(),

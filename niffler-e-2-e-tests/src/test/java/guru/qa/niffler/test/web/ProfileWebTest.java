@@ -22,7 +22,7 @@ public class ProfileWebTest {
     @Test
     void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) throws InterruptedException {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login("esa","12345")
+                .login("esa", "12345")
                 .openProfilePage()
                 .turnOnShowArchivedCategory();
         Assertions.assertTrue(new ProfilePage().checkArchivedCategoryIsDisplay(category.name()));
