@@ -13,7 +13,6 @@ public class FriendsPage {
     private final ElementsCollection listFriends = $$("#friends tr");
     private final ElementsCollection listRequests = $$("#requests tr");
 
-
     public AllPeoplePage openAllPeoplePage() {
         buttonToOpenAllPeoplePage.click();
         return new AllPeoplePage();
