@@ -2,7 +2,8 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.annotation.DisableByIssue;
+import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.SpendJson;
@@ -16,13 +17,18 @@ public class SpendingWebTest {
 
     private static final Config CFG = Config.getInstance();
 
-    @Spending(
+    @User(
             username = "esa",
-            category = "Обучение",
-            description = "Обучение Advanced 2.0",
-            amount = 79990
+            categories = @Category(
+                    archived = false
+            ),
+            spendings = @Spending(
+                    category = "Обучение",
+                    description = "Обучение Advanced 2.0",
+                    amount = 79990
+            )
     )
-    @DisableByIssue("1")
+    // @DisableByIssue("1")
     @Test
     void categoryDescriptionShouldBeChangedFromTable(SpendJson spend) {
         final String newDescription = "Обучение Niffler Next Generation";
