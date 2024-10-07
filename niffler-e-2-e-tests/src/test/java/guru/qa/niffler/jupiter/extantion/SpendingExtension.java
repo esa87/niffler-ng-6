@@ -8,6 +8,7 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
+
 import java.util.Date;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
