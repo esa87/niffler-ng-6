@@ -127,7 +127,7 @@ public class UserCreateInBdTest {
         AuthUserDbClient authUserDbClient = new AuthUserDbClient();
         authUserDbClient.createUsersFriendShipJdbc(new UserJson(
                         null,
-                        "friend3",
+                        "friend35",
                         null,
                         null,
                         RandomDataUtils.randomName(),
@@ -137,14 +137,14 @@ public class UserCreateInBdTest {
                 ),
                 new UserJson(
                         null,
-                        "friend4",
+                        "friend36",
                         null,
                         null,
                         RandomDataUtils.randomName(),
                         CurrencyValues.RUB,
                         null,
                         null
-                ), FriendshipStatus.ACCEPTED
+                ), FriendshipStatus.PENDING
         );
 
     }

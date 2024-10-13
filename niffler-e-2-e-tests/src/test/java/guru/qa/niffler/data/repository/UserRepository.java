@@ -9,6 +9,10 @@ import java.util.UUID;
 public interface UserRepository {
     UserEntity createUser(UserEntity user);
 
+    void addFriendship(UserEntity requester, UserEntity addressee);
+
+    void addInvitation(UserEntity requester, UserEntity addressee);
+
     Optional<UserEntity> findById(UUID id);
 
     Optional<UserEntity> findByUsername(String username);

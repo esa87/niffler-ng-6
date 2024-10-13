@@ -269,7 +269,7 @@ public class AuthUserDbClient {
     }
 
     public void createUsersFriendShipJdbc(UserJson userJson1, UserJson userJson2, FriendshipStatus value) {
-         xaTxTemplate.execute(() -> {
+        xaTxTemplate.execute(() -> {
             List<UserJson> userList = new ArrayList<>();
             userList.add(userJson1);
             userList.add(userJson2);
@@ -294,12 +294,17 @@ public class AuthUserDbClient {
                 authUserRepository.create(authUser);
             }
             if (value.equals(FriendshipStatus.PENDING)) {
-                new UserRepositoryJdbc().createUsersFriendshipPending(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
+                UserEntity requester = new UserRepositoryJdbc().createUser(UserEntity.fromJson(userJson1));
+                UserEntity addressee = new UserRepositoryJdbc().createUser(UserEntity.fromJson(userJson2));
+                new UserRepositoryJdbc().addInvitation(requester, addressee);
             } else {
-                new UserRepositoryJdbc().createUsersFriendshipAccepted(UserEntity.fromJson(userJson1), UserEntity.fromJson(userJson2));
+                UserEntity requester = new UserRepositoryJdbc().createUser(UserEntity.fromJson(userJson1));
+                UserEntity addressee = new UserRepositoryJdbc().createUser(UserEntity.fromJson(userJson2));
+                new UserRepositoryJdbc().addFriendship(requester, addressee);
+                new UserRepositoryJdbc().addFriendship(addressee, requester);
             }
-             return null;
-         });
+            return null;
+        });
     }
 
 }
