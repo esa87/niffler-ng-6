@@ -118,7 +118,7 @@ public class UserDaoJdbc implements UserDao {
 
             try (ResultSet rs = ps.getResultSet()) {
                 List<UserEntity> list = new ArrayList<>();
-                if (rs.next()) {
+                while (rs.next()) {
                     UserEntity ue = new UserEntity();
                     ue.setId(rs.getObject("id", UUID.class));
                     ue.setUsername(rs.getString("username"));

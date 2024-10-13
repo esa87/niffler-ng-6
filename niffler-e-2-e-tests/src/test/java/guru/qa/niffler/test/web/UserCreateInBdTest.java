@@ -1,15 +1,20 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.model.AuthUserJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.AuthUserDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class UserCreateInBdTest {
     @Test
     void createUserInJdbc() {
-        UserJson user = new AuthUserDbClient().createUserJdbs(new UserJson(
+        UserJson user = new AuthUserDbClient().createUserJdbc(new UserJson(
                 null,
                 RandomDataUtils.randomUsername(),
                 null,
@@ -24,7 +29,7 @@ public class UserCreateInBdTest {
 
     @Test
     void createUserInJdbcTx() {
-        UserJson user = new AuthUserDbClient().createUserJdbsTx(new UserJson(
+        UserJson user = new AuthUserDbClient().createUserJdbcTx(new UserJson(
                 null,
                 "Ignat-jdbcTx",
                 null,
@@ -72,7 +77,7 @@ public class UserCreateInBdTest {
     @Test
     void createUserSpringCtmInDbTx() {
         AuthUserDbClient authUserDbClient = new AuthUserDbClient();
-        UserJson user = authUserDbClient.createUserJdbsCtmTx(new UserJson(
+        UserJson user = authUserDbClient.createUserJdbcCtmTx(new UserJson(
                 null,
                 "Ignat-springTxCtm3",
                 null,
@@ -88,7 +93,7 @@ public class UserCreateInBdTest {
     @Test
     void createUserSpringInDbTx() {
         AuthUserDbClient authUserDbClient = new AuthUserDbClient();
-        UserJson user = authUserDbClient.createUserJdbsSpringTx(new UserJson(
+        UserJson user = authUserDbClient.createUserJdbcSpringTx(new UserJson(
                 null,
                 "Ignat-springTxCtm2",
                 null,
@@ -115,6 +120,33 @@ public class UserCreateInBdTest {
                 null
         ));
         System.out.println(user);
+    }
+
+    @Test
+    void createFriendship() {
+        AuthUserDbClient authUserDbClient = new AuthUserDbClient();
+        authUserDbClient.createUsersFriendShipJdbc(new UserJson(
+                        null,
+                        "friend3",
+                        null,
+                        null,
+                        RandomDataUtils.randomName(),
+                        CurrencyValues.RUB,
+                        null,
+                        null
+                ),
+                new UserJson(
+                        null,
+                        "friend4",
+                        null,
+                        null,
+                        RandomDataUtils.randomName(),
+                        CurrencyValues.RUB,
+                        null,
+                        null
+                ), FriendshipStatus.ACCEPTED
+        );
+
     }
 
 }
