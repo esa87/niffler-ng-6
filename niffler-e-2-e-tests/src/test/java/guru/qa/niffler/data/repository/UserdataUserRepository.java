@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserRepository {
-    UserEntity createUser(UserEntity user);
+public interface UserdataUserRepository {
+    UserEntity create(UserEntity authUser);
+
+    UserEntity update(UserEntity authUser);
 
     void addFriendship(UserEntity requester, UserEntity addressee);
 
@@ -19,5 +21,9 @@ public interface UserRepository {
 
     List<UserEntity> findAll();
 
-    void delete(UserEntity user);
+    void addInvitation(UserEntity requester, UserEntity addressee);
+
+    void addFriend(UserEntity requester, UserEntity addressee);
+
+    void remove(UserEntity authUser);
 }
