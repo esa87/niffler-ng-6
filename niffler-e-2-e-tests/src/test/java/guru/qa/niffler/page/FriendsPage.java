@@ -16,7 +16,6 @@ public class FriendsPage {
     private final SelenideElement buttonSearch = $("button[id='input-submit']");
 
 
-
     public AllPeoplePage openAllPeoplePage() {
         buttonToOpenAllPeoplePage.click();
         return new AllPeoplePage();
