@@ -14,10 +14,12 @@ import static com.codeborne.selenide.Selenide.$$;
 public class FriendsPage {
     private final SelenideElement buttonToOpenAllPeoplePage = $("a[href='/people/all']");
     private final ElementsCollection listFriends = $$("#friends tr");
+
     private final SearchField searchField = new SearchField($("input[aria-label='search']"));
     private final FriendsRequestTable friendsRequestTable = new FriendsRequestTable();
 
     @Step("Открываем страницу со списком друзей")
+
     public AllPeoplePage openAllPeoplePage() {
         buttonToOpenAllPeoplePage.click();
         return new AllPeoplePage();
