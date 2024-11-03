@@ -2,6 +2,11 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+
+import guru.qa.niffler.page.component.SearchField;
+import io.qameta.allure.Step;
+
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -9,20 +14,21 @@ import static com.codeborne.selenide.Selenide.$$;
 public class AllPeoplePage {
     private final SelenideElement bottonToOpenFriendsPage = $("a[href='/people/friends']");
     private final ElementsCollection listAllPeople = $$("#all tr");
-    private final SelenideElement fieldSearch = $("input[placeholder='Search']");
-    private final SelenideElement buttonSearch = $("button[id='input-submit']");
+    private final SearchField searchField = new SearchField($("input[aria-label='search']"));
+
 
     public FriendsPage openFriendsPeoplePage() {
         bottonToOpenFriendsPage.click();
         return new FriendsPage();
     }
 
+    @Step("Ищем в таблице со списком людей записи по заданной строке")
     public AllPeoplePage toSearch(String searchString){
-        fieldSearch.setValue(searchString);
-        buttonSearch.click();
-        return new AllPeoplePage();
+        searchField.search(searchString);
+        return this;
     }
 
+    @Step("Проверяем, что есть исходящее предложение дружбы")
     public void checkHaveOutcomeInvitation() {
         listAllPeople.find(text("Waiting...")).should(visible);
     }
