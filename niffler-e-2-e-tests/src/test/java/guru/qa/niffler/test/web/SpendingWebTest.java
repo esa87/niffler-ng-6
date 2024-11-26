@@ -3,18 +3,33 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extantion.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.utils.RandomDataUtils;
+import guru.qa.niffler.utils.ScreenDiffResult;
+import io.qameta.allure.Allure;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.core.io.ClassPathResource;
+import ru.yandex.qatools.ashot.comparison.ImageDiff;
+import ru.yandex.qatools.ashot.comparison.ImageDiffer;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Date;
+
+import static com.codeborne.selenide.Selenide.$;
 
 @ExtendWith(BrowserExtension.class)
 @Order(2)
@@ -44,14 +59,109 @@ public class SpendingWebTest {
                 .setNewSpendingDescription(newDescription);
         new MainPage().checkThatTableContainsSpending(newDescription);
     }
+
     @User
     @Test
     void createSpending() {
-        SpendJson spend = new SpendJson(null, new Date(), null, null, 555.0, RandomDataUtils.randomName(),null);
+        SpendJson spend = new SpendJson(null, new Date(), null, null, 555.0, RandomDataUtils.randomName(), null);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("esa", "12345")
                 .openNewSpending()
                 .createNewSpending(spend)
                 .checkAlert("New spending is successfully created");
     }
+
+    @User
+    @ScreenShotTest("img/expected-stat.png")
+    void checkStatComponentTest(BufferedImage expected) throws IOException {
+        SpendJson spend = new SpendJson(null, new Date(), null, null, 555.0, RandomDataUtils.randomName(), null);
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login("esa", "12345");
+
+        BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
+
+        Assertions.assertFalse(new ScreenDiffResult(
+                expected,
+                actual
+        ));
+    }
+
+    @User(
+            spendings = @Spending(
+                    category = "work",
+                    description = "Education",
+                    amount = 3000
+            )
+    )
+    @ScreenShotTest(value = "img/stat-edit.png")
+    void checkStatComponentAfterEditSpendingTest(BufferedImage expected, UserJson user) throws IOException, InterruptedException {
+        String newAmount = "2000";
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .editSpending(user.testData().spendJsonList().get(0).description())
+                .setNewSpendingAmount(newAmount)
+                .checkValueCategory(user.testData().spendJsonList().get(0).category().name(), newAmount);
+
+        Thread.sleep(5000);
+        BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
+
+        Assertions.assertFalse(new ScreenDiffResult(
+                expected,
+                actual
+        ));
+    }
+
+    @User(
+            spendings = { @Spending(
+                    category = "work",
+                    description = "Education",
+                    amount = 3000
+            ),
+             @Spending(
+                    category = "entertainment",
+                    description = "Move",
+                    amount = 500
+            )}
+
+    )
+    @ScreenShotTest(value = "img/stat-delete.png")
+    void checkStatComponentAfterDeleteSpendingTest(BufferedImage expected, UserJson user) throws IOException, InterruptedException {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .deleteSpending(user.testData().spendJsonList().get(1).description());
+
+        Thread.sleep(5000);
+        BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
+
+        Assertions.assertFalse(new ScreenDiffResult(
+                expected,
+                actual
+        ));
+    }
+
+    @User(
+            spendings = @Spending(
+                    category = "work",
+                    description = "Education",
+                    amount = 3000
+            )
+    )
+    @ScreenShotTest(value = "img/stat-archiv.png")
+    void checkStatComponentAfterArchivedCategoryTest(BufferedImage expected, UserJson user) throws IOException, InterruptedException {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .openProfilePage()
+                .archivedCategory(user.testData().spendJsonList().get(0).category().name())
+                .returnToMainPage()
+                .checkValueCategory("Archived", "3000");
+
+        Thread.sleep(5000);
+        BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
+
+        Assertions.assertFalse(new ScreenDiffResult(
+                expected,
+                actual
+        ));
+    }
+
 }
