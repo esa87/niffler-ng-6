@@ -1,6 +1,5 @@
-package guru.qa.niffler.jupiter.extantion;
+package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
@@ -9,7 +8,6 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.SpendDbClient;
-import guru.qa.niffler.utils.RandomDataUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -19,12 +17,10 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
-
 
     private final SpendClient spendClient = new SpendDbClient();
 
@@ -37,26 +33,26 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                         UserJson user = context.getStore(UserExtension.NAMESPACE)
                                 .get(context.getUniqueId(), UserJson.class);
                         for (Spending spendingAnnotation : anno.spendings()) {
-                             SpendJson spend = new SpendJson(
+                            SpendJson spend = new SpendJson(
                                     null,
                                     new Date(),
                                     new CategoryJson(
-                                           null,
+                                            null,
                                             spendingAnnotation.category(),
-                                            user != null ? user.username() :  anno.username(),
+                                            user != null ? user.username() : anno.username(),
                                             false
                                     ),
                                     CurrencyValues.RUB,
                                     spendingAnnotation.amount(),
                                     spendingAnnotation.description(),
-                                     user != null ? user.username() :  anno.username()
+                                    user != null ? user.username() : anno.username()
                             );
                             SpendJson createdSpend = spendClient.create(spend);
                             result.add(createdSpend);
                         }
 
                         if (user != null) {
-                            user.testData().spendJsonList().addAll(result);
+                            user.testData().spends().addAll(result);
                         } else {
                             context.getStore(NAMESPACE).put(
                                     context.getUniqueId(),
