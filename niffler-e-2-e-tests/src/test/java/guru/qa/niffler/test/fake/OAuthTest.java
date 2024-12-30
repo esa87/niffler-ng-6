@@ -9,8 +9,6 @@ import guru.qa.niffler.model.UserJson;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 @WebTest
 public class OAuthTest {
     private static final Config CFG = Config.getInstance();
