@@ -5,7 +5,7 @@ import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.RestTest;
 import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
-import guru.qa.niffler.model.FriendState;
+import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.model.pageable.RestResponsePage;
 import guru.qa.niffler.api.GatewayApiV2Client;
@@ -41,11 +41,11 @@ public class FriendsV2Test {
     Assertions.assertEquals(3, result.getContent().size());
 
     final List<UserJson> friendsFromResponse = result.stream().filter(
-        u -> u.friendState() == FriendState.FRIEND
+        u -> u.friendshipStatus() == FriendshipStatus.FRIEND
     ).toList();
 
     final List<UserJson> invitationsFromResponse = result.stream().filter(
-        u -> u.friendState() == FriendState.INVITE_RECEIVED
+        u -> u.friendshipStatus() == FriendshipStatus.INVITE_RECEIVED
     ).toList();
 
     Assertions.assertEquals(2, friendsFromResponse.size());
