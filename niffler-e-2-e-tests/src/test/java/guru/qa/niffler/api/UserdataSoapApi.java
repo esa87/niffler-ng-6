@@ -1,6 +1,6 @@
 package guru.qa.niffler.api;
 
-import jaxb.userdata.*;
+import guru.qa.niffler.userdata.wsdl.*;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -40,7 +40,7 @@ public interface UserdataSoapApi {
             "Accept-Charset: utf-8"
     })
     @POST("ws")
-    Call<UsersResponse> removeFriend(@Body RemoveFriendRequest removeFriendRequest);
+    Call<Void> removeFriend(@Body RemoveFriendRequest removeFriendRequest);
 
 
     @Headers(value = {
@@ -48,27 +48,20 @@ public interface UserdataSoapApi {
             "Accept-Charset: utf-8"
     })
     @POST("ws")
-    Call<UsersResponse> acceptInvitation(@Body AcceptInvitationRequest acceptInvitationRequest);
+    Call<UserResponse> acceptInvitation(@Body AcceptInvitationRequest acceptInvitationRequest);
 
     @Headers(value = {
             "Content-type: text/xml",
             "Accept-Charset: utf-8"
     })
     @POST("ws")
-    Call<UsersResponse> declineInvitation(@Body DeclineInvitationRequest declineInvitationRequest);
+    Call<UserResponse> declineInvitation(@Body DeclineInvitationRequest declineInvitationRequest);
 
     @Headers(value = {
             "Content-type: text/xml",
             "Accept-Charset: utf-8"
     })
     @POST("ws")
-    Call<UsersResponse> sendInvitationRequest(@Body SendInvitationRequest sendInvitationRequest);
-
-
-
-
-
-
-
+    Call<UserResponse> sendInvitationRequest(@Body SendInvitationRequest sendInvitationRequest);
 
 }
