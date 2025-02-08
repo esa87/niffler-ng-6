@@ -18,8 +18,6 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import org.openqa.selenium.Cookie;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -63,11 +61,11 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
                         SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
                         List<SpendJson> spends = spendApiClient.getSpends(apiLogin.username(), CurrencyValues.RUB, "2024-01-01", formater.format(new Date()));
                         List<UserJson> friends = userdataApiClient.getAllFriends(apiLogin.username())
-                                .stream().filter(x -> FriendState.FRIEND.equals(x.friendState())).toList();
+                                .stream().filter(x -> FriendshipStatus.FRIEND.equals(x.friendshipStatus())).toList();
                         List<UserJson> outcomeInvitation = userdataApiClient.getAllPeople(apiLogin.username())
-                                .stream().filter(x -> FriendState.INVITE_SENT.equals(x.friendState())).toList();
+                                .stream().filter(x -> FriendshipStatus.INVITE_SENT.equals(x.friendshipStatus())).toList();
                         List<UserJson> incomeInvitation = userdataApiClient.getAllFriends(apiLogin.username())
-                                .stream().filter(x -> FriendState.INVITE_RECEIVED.equals(x.friendState())).toList();
+                                .stream().filter(x -> FriendshipStatus.INVITE_RECEIVED.equals(x.friendshipStatus())).toList();
                         UserJson fakeUser = new UserJson(
                                 apiLogin.username(),
                                 new TestData(

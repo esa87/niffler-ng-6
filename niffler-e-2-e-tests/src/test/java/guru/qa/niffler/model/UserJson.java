@@ -29,8 +29,8 @@ public record UserJson(
         String photo,
         @JsonProperty("photoSmall")
         String photoSmall,
-        @JsonProperty("friendState")
-        FriendState friendState,
+        @JsonProperty("friendshipStatus")
+        FriendshipStatus friendshipStatus,
         @JsonIgnore
         TestData testData) {
 
@@ -43,10 +43,10 @@ public record UserJson(
     }
 
     public UserJson addTestData(@Nonnull TestData testData) {
-        return new UserJson(id, username, fullname, firstname, surname, currency, photo, photoSmall, friendState, testData);
+        return new UserJson(id, username, fullname, firstname, surname, currency, photo, photoSmall, friendshipStatus, testData);
     }
 
-    public static @Nonnull UserJson fromEntity(@Nonnull UserEntity entity, @Nullable FriendState friendState) {
+    public static @Nonnull UserJson fromEntity(@Nonnull UserEntity entity, @Nullable FriendshipStatus friendState) {
         return new UserJson(
                 entity.getId(),
                 entity.getUsername(),
